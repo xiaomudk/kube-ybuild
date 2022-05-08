@@ -1,0 +1,6 @@
+address: 127.0.0.1:8090
+database:
+  type: sqlite3
+  dbfile: kube-ybuild.db
+log:
+  level: debug
