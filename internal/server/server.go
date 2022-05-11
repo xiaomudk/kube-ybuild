@@ -7,10 +7,13 @@ import (
 	"github.com/labstack/echo/v4"
 	"github.com/spf13/pflag"
 
+	"github.com/xiaomudk/kube-ybuild/internal/repository"
+	"github.com/xiaomudk/kube-ybuild/internal/service"
 	logger "github.com/xiaomudk/kube-ybuild/pkg/logs"
 
 	"github.com/xiaomudk/kube-ybuild/internal/config"
 	"github.com/xiaomudk/kube-ybuild/internal/middleware"
+	"github.com/xiaomudk/kube-ybuild/internal/model"
 	"github.com/xiaomudk/kube-ybuild/internal/routers"
 	"github.com/xiaomudk/kube-ybuild/pkg/app"
 	"github.com/xiaomudk/kube-ybuild/pkg/transport/http"
@@ -40,6 +43,10 @@ func NewHTTPServer() *app.App {
 	// -------------- init resource -------------
 	routers.Init(e)
 	middleware.Init(e)
+	// init db
+	model.Init()
+	service.Svc = service.New(repository.New(model.GetDB()))
+	model.MigrateDatabase(model.GetDB())
 
 	srv := http.NewServer(
 		http.WithAddress(config.Conf.Address),
