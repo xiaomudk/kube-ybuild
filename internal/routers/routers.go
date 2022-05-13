@@ -13,7 +13,7 @@ func Init(e *echo.Echo) {
 	// HealthCheck 健康检查路由
 	e.GET("/health", app.HealthCheck)
 	e.Any("/*", app.RouteNotFound)
-	apiV1 := e.Group("/v1")
+	apiV1 := e.Group("/api/v1")
 
 	// 认证相关路由
 	apiV1.POST("/register", user.Register)
@@ -23,6 +23,7 @@ func Init(e *echo.Echo) {
 	// 用户
 	apiV1User.Use(middleware.JWT([]byte("secret")))
 
+	apiV1User.GET("/info", user.Info)
 	apiV1User.GET("/:id", user.Get)
 	apiV1User.PUT("/:id", user.Update)
 	apiV1User.DELETE("/:id", user.Delete)

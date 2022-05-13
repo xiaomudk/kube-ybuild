@@ -4,6 +4,8 @@ import (
 	"context"
 	"time"
 
+	"github.com/golang-jwt/jwt"
+
 	"github.com/xiaomudk/kube-ybuild/internal/repository"
 	"github.com/xiaomudk/kube-ybuild/pkg/utils"
 
@@ -18,6 +20,7 @@ type UserService interface {
 	Register(ctx context.Context, username, email, password string) error
 	Login(ctx context.Context, username, password string) (tokenStr string, err error)
 	GetUserByID(ctx context.Context, id uint64) (*model.UserModel, error)
+	GetUserByToken(ctx context.Context, token *jwt.Token) (*model.UserModel, error)
 	GetUserByUsername(ctx context.Context, username string) (*model.UserModel, error)
 	UpdateUser(ctx context.Context, id uint64, userMap map[string]interface{}) error
 	DeleteUser(ctx context.Context, id uint64) error
@@ -108,6 +111,16 @@ func (s *userService) DeleteUser(ctx context.Context, id uint64) error {
 // GetUserByID 获取单条用户信息
 func (s *userService) GetUserByID(ctx context.Context, id uint64) (*model.UserModel, error) {
 	return s.repo.GetUser(ctx, id)
+}
+
+func (s *userService) GetUserByToken(ctx context.Context, token *jwt.Token) (*model.UserModel, error) {
+	userInfo := token.Claims.(jwt.MapClaims)
+	userId, ok := userInfo["user_id"].(float64)
+	if !ok {
+		return nil, errors.Errorf("sign token err")
+	}
+
+	return s.GetUserByID(ctx, uint64(userId))
 }
 
 func (s *userService) GetUserByUsername(ctx context.Context, username string) (*model.UserModel, error) {
