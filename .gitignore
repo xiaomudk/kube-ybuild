@@ -1,3 +1,19 @@
+### VisualStudioCode template
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+*.code-workspace
+
+# Local History for Visual Studio Code
+.history/
+
+### JetBrains
+.idea
+.idea/*
+
+### Go template
 # Binaries for programs and plugins
 *.exe
 *.exe~
@@ -13,3 +29,22 @@
 
 # Dependency directories (remove the comment below to include it)
 # vendor/
+
+# web
+node_modules
+.DS_Store
+dist
+.npmrc
+.cache
+
+.local
+# local env files
+.env.local
+.env.*.local
+.eslintcache
+
+# Log files
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+*pnpm-debug.log*
