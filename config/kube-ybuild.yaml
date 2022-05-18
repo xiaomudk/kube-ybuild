@@ -1,6 +1,12 @@
 address: 127.0.0.1:8090
 database:
-  type: sqlite3
-  dbfile: kube-ybuild.db
+#  type: sqlite3
+#  dbfile: kube-ybuild.db
+  type: mysql
+  username: root
+  host: 127.0.0.1
+  password: zhao888,hl.
+  port: 3306
+  dbname: kube_ybuild
 log:
   level: debug

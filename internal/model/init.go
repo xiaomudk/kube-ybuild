@@ -27,7 +27,7 @@ func GetDB() *gorm.DB {
 // won't delete/change current data.
 // nolint:unused // may be reused in the feature, or just show a migrate usage.
 func MigrateDatabase(db *gorm.DB) error {
-	if err := db.AutoMigrate(UserModel{}); err != nil {
+	if err := db.AutoMigrate(UserModel{}, TemplateModel{}); err != nil {
 		return errors.Wrap(err, "migrate user model failed")
 	}
 	return nil

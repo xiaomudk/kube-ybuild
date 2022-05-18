@@ -26,6 +26,15 @@ type Repository interface {
 	GetUserByUsername(ctx context.Context, username string) (*model.UserModel, error)
 	UserIsExist(user *model.UserModel) (bool, error)
 
+	// BaseTemplate
+	CreateTemplate(ctx context.Context, tpl *model.TemplateModel) (id uint64, err error)
+	UpdateTemplate(ctx context.Context, id uint64, templateMap map[string]interface{}) error
+	GetTemplate(ctx context.Context, id uint64) (*model.TemplateModel, error)
+	GetTemplateByTplName(ctx context.Context, tplName string) ([]model.TemplateModel, error)
+	DeleteTemplate(ctx context.Context, id uint64) error
+	ListTemplate(ctx context.Context) ([]model.TemplateModel, error)
+	SearchTemplateByName(ctx context.Context, templateName string) ([]model.TemplateModel, error)
+
 	Close()
 }
 

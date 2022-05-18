@@ -21,6 +21,7 @@ const (
 // Service define all service
 type Service interface {
 	Users() UserService
+	Templates() TemplateService
 }
 
 // service struct
@@ -37,4 +38,8 @@ func New(repo repository.Repository) Service {
 
 func (s *service) Users() UserService {
 	return newUsers(s)
+}
+
+func (s *service) Templates() TemplateService {
+	return newTemplates(s)
 }
