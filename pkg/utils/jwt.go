@@ -3,9 +3,9 @@
 package utils
 
 import (
-	"time"
-
+	"errors"
 	"github.com/golang-jwt/jwt"
+	"time"
 )
 
 // Sign signs the payload with the specified secret.
@@ -34,4 +34,37 @@ func Sign(payload map[string]interface{}, secret string, timeout int64) (tokenSt
 	tokenString, err = token.SignedString([]byte(secret))
 
 	return
+}
+
+func Secret() jwt.Keyfunc {
+	return func(token *jwt.Token) (interface{}, error) {
+		return []byte("secret"), nil
+	}
+}
+
+type User struct {
+	UserId   uint64 `json:"user_id"`
+	Username string `json:"username"`
+	jwt.StandardClaims
+}
+
+func ParseToken(tokens string) (*User, error) {
+	token, err := jwt.ParseWithClaims(tokens, &User{}, Secret())
+	if err != nil {
+		if ve, ok := err.(*jwt.ValidationError); ok {
+			if ve.Errors&jwt.ValidationErrorMalformed != 0 {
+				return nil, errors.New("that's not even a token")
+			} else if ve.Errors&jwt.ValidationErrorExpired != 0 {
+				return nil, errors.New("token is expired")
+			} else if ve.Errors&jwt.ValidationErrorNotValidYet != 0 {
+				return nil, errors.New("token not active yet")
+			} else {
+				return nil, errors.New("couldn't handle this token")
+			}
+		}
+	}
+	if user, ok := token.Claims.(*User); ok && token.Valid {
+		return user, nil
+	}
+	return nil, errors.New("couldn't handle this token")
 }
