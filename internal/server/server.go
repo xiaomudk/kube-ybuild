@@ -35,6 +35,7 @@ func (apiVal *APIValidator) Validate(i interface{}) error {
 
 // NewHTTPServer creates an HTTP server
 func NewHTTPServer() *app.App {
+	pflag.Parse()
 	e := echo.New()
 	config.Init(*conf)
 	e.Logger = logger.NewEchoLogger(config.Conf.Log)

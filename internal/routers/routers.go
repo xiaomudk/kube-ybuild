@@ -3,6 +3,8 @@ package routers
 import (
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
+	"github.com/xiaomudk/kube-ybuild/internal/handler/v1/template"
+	md "github.com/xiaomudk/kube-ybuild/internal/middleware"
 
 	"github.com/xiaomudk/kube-ybuild/internal/handler/v1/user"
 	"github.com/xiaomudk/kube-ybuild/pkg/app"
@@ -20,6 +22,8 @@ func Init(e *echo.Echo) {
 	apiV1.POST("/login", user.Login)
 
 	apiV1User := apiV1.Group("/users")
+	apiV1Tpl := apiV1.Group("/templates")
+
 	// 用户
 	apiV1User.Use(middleware.JWT([]byte("secret")))
 
@@ -27,4 +31,14 @@ func Init(e *echo.Echo) {
 	apiV1User.GET("/:id", user.Get)
 	apiV1User.PUT("/:id", user.Update)
 	apiV1User.DELETE("/:id", user.Delete)
+
+	// 模板
+	apiV1Tpl.Use(md.TokenValidateMiddleware)
+
+	apiV1Tpl.POST("/create", template.Create)
+	apiV1Tpl.PUT("/:id", template.Update)
+	apiV1Tpl.GET("/:id", template.Get)
+	apiV1Tpl.DELETE("/:id", template.Delete)
+	apiV1Tpl.GET("/list", template.List)
+	apiV1Tpl.GET("/search", template.Search)
 }

@@ -1,6 +1,7 @@
 package app
 
 import (
+	"github.com/morkid/paginate"
 	"net/http"
 
 	"github.com/labstack/echo/v4"
@@ -19,10 +20,18 @@ func init() {
 
 // Response define a response struct
 type Response struct {
-	Code    int         `json:"code"`
-	Message string      `json:"message"`
-	Data    interface{} `json:"data"`
-	Details []string    `json:"details,omitempty"`
+	Code       int         `json:"code"`
+	Message    string      `json:"message"`
+	Data       interface{} `json:"data"`
+	Details    []string    `json:"details,omitempty"`
+	Page       int64       `json:"page"`
+	Size       int64       `json:"size"`
+	MaxPage    int64       `json:"max_page"`
+	TotalPages int64       `json:"total_pages"`
+	Total      int64       `json:"total"`
+	Last       bool        `json:"last"`
+	First      bool        `json:"first"`
+	Visible    int64       `json:"visible"`
 }
 
 // NewResponse return a response
@@ -31,16 +40,34 @@ func NewResponse() *Response {
 }
 
 // Success return a success response
-func Success(c ResponseHander, data interface{}) { resp.Success(c, data) }
+func Success(c ResponseHander, data interface{}) {
+	resp.Success(c, data)
+}
 func (r *Response) Success(c ResponseHander, data interface{}) {
+	if data == nil {
+		data = map[string]string{}
+	}
+	c.JSON(http.StatusOK, Response{
+		Code:    errcode.Success.Code(),
+		Message: errcode.Success.Msg(),
+		Data:    data,
+	})
+}
+
+func (r *Response) PageSuccess(c ResponseHander, data interface{}, page *paginate.Page) {
 	if data == nil {
 		data = map[string]string{}
 	}
 
 	c.JSON(http.StatusOK, Response{
-		Code:    errcode.Success.Code(),
-		Message: errcode.Success.Msg(),
-		Data:    data,
+		Code:       errcode.Success.Code(),
+		Message:    errcode.Success.Msg(),
+		Data:       data,
+		Page:       page.Page,
+		Size:       page.Size,
+		Total:      page.Total,
+		MaxPage:    page.MaxPage,
+		TotalPages: page.TotalPages,
 	})
 }
 

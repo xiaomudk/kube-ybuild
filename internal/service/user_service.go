@@ -65,10 +65,10 @@ func (s *userService) Register(ctx context.Context, username, email, password st
 }
 
 // Login 登录
-func (s *userService) Login(ctx context.Context, email, password string) (tokenStr string, err error) {
-	u, err := s.GetUserByUsername(ctx, email)
+func (s *userService) Login(ctx context.Context, username, password string) (tokenStr string, err error) {
+	u, err := s.GetUserByUsername(ctx, username)
 	if err != nil {
-		return "", errors.Wrapf(err, "get user info err by email")
+		return "", errors.Wrapf(err, "get user info err by username")
 	}
 
 	// ComparePasswords the login password with the user password.

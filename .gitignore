@@ -42,6 +42,7 @@ dist
 .env.local
 .env.*.local
 .eslintcache
+config/kube-ybuild-dev.yaml
 
 # Log files
 npm-debug.log*
